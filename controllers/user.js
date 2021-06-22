@@ -27,6 +27,25 @@ module.exports.getUserProfile = async (req, res, next) => {
   }
 };
 
+module.exports.updateUserProfile = async (req, res, next) => {
+  const { email, name } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(req.user._id, { email, name }, opts)
+      .orFail(new NotFoundError('Запрашиваемый профиль не найден'));
+    res.status(200).json(
+      {
+        email: user.email, name: user.name, _id: user._id,
+      },
+    );
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      next(new BadRequestError('При обновлении профиля переданы некорректные данные'));
+      return;
+    }
+    next(err);
+  }
+};
+
 module.exports.createUser = async (req, res, next) => {
   const { email, password, name } = req.body;
   if (!email || !password || !name) {

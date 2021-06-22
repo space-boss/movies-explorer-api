@@ -10,6 +10,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const { isURL } = require('validator');
 
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 2000, MONGO_URL = 'mongodb://localhost:27017/beatfilmsdb' } = process.env;
 const { userRoutes } = require('./routes/user');
@@ -20,6 +21,8 @@ const NotFoundError = require('./errors/not-found-err');
 const app = express();
 
 app.use(express.json());
+
+app.use(requestLogger);
 
 mongoose.set('debug', true);
 
@@ -55,6 +58,8 @@ router.use('/', auth, moviesRoutes);
 router.use((req, res, next) => {
   next(new NotFoundError('Ресурс не найден'));
 });
+
+app.use(errorLogger);
 
 router.use(errors());
 

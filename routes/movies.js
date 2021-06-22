@@ -3,7 +3,7 @@ const express = require('express');
 const { isURL } = require('validator');
 
 const {
-  getMovies, createMovie, deleteMoviebyId,
+  getMovies, createMovie, deleteMovieById,
 } = require('../controllers/movies');
 
 const moviesRoutes = express.Router();
@@ -34,10 +34,10 @@ moviesRoutes.post('/movies', /*celebrate({
   }),
 }),*/ createMovie);
 
-/*moviesRoutes.delete('/movies/movieId', celebrate({
+moviesRoutes.delete('/movies/:movieId', /*celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().hex().length(24),
   }).unknown(true),
-}), deleteMoviebyId); */
+}),*/ deleteMovieById);
 
 exports.moviesRoutes = moviesRoutes;

@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 const { Movie } = require('../models/Movie');
+const BadRequestError = require('../errors/bad-request-err');
+const ValidationError = require('../errors/validation-err');
+const AuthError = require('../errors/authentication-err');
+const NotFoundError = require('../errors/not-found-err');
+const ConflictError = require('../errors/conflict-err');
 
 module.exports.getMovies = async (req, res, next) => {
   try {
@@ -18,7 +23,6 @@ module.exports.createMovie = async (req, res, next) => {
       thumbnail, nameRU, nameEN,
     } = req.body;
     const ownerId = new mongoose.Types.ObjectId(req.user._id);
-    console.log(ownerId);
     const movie = await Movie.create({
       country,
       director,
@@ -48,9 +52,29 @@ module.exports.createMovie = async (req, res, next) => {
     });
   } catch (err) {
     if (err.name === 'ValidationError') {
-      console.log('При создании карточки переданы некорректные данные');
+      console.log('При создании страницы фильма переданы некорректные данные');
       return;
     }
+    next(err);
+  }
+};
+
+module.exports.deleteMovieById = async (req, res, next) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.movieId)) {
+      throw new ValidationError('Формат _id не валиден');
+    } else {
+      const movie = await Movie.findById(req.params.movieId)
+        .orFail(new NotFoundError('Запрашиваемый фильм не найден'));
+      if (movie.owner.toString() !== req.user._id) {
+        throw new BadRequestError('У вас нет прав для удаления информации о фильме');
+      } else {
+        const movieWithId = await Movie.findByIdAndDelete(req.params.movieId)
+          .orFail(new NotFoundError('Запрашиваемый фильм не найден'));
+        res.status(200).send(movieWithId);
+      }
+    }
+  } catch (err) {
     next(err);
   }
 };
