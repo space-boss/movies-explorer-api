@@ -15,7 +15,7 @@ module.exports.createMovie = async (req, res, next) => {
     const {
       country, director, duration,
       year, description, image, trailer,
-      nameRu, nameEn, thumbnail,
+      thumbnail, nameRU, nameEN,
     } = req.body;
     const ownerId = new mongoose.Types.ObjectId(req.user._id);
     console.log(ownerId);
@@ -28,8 +28,8 @@ module.exports.createMovie = async (req, res, next) => {
       image,
       trailer,
       owner: ownerId,
-      nameRu,
-      nameEn,
+      nameRU,
+      nameEN,
       thumbnail,
     });
     res.status(200).json({
@@ -43,8 +43,8 @@ module.exports.createMovie = async (req, res, next) => {
       thumbnail: movie.thumbnail,
       owner: movie.owner,
       _id: movie._id,
-      nameRu: movie.nameRu,
-      nameEn: movie.nameEn,
+      nameRU: movie.nameRU,
+      nameEN: movie.nameEN,
     });
   } catch (err) {
     if (err.name === 'ValidationError') {
