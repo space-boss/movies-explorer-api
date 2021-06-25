@@ -11,6 +11,7 @@ const { isURL } = require('validator');
 
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/error-handler');
 
 const { PORT = 2000, MONGO_URL = 'mongodb://localhost:27017/beatfilmsdb' } = process.env;
 const { userRoutes } = require('./routes/user');
@@ -63,17 +64,7 @@ app.use(errorLogger);
 
 router.use(errors());
 
-router.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-});
+router.use(errorHandler);
 
 app.use(router);
 
