@@ -7,7 +7,8 @@
     "test": "jest",
     "lint": "npx eslint .",
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "deploy": "scp -r ./* root@116.203.138.46:/root/movies-explorer-api"
   },
   "repository": {
     "type": "git",
