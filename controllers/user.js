@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/User');
 const BadRequestError = require('../errors/bad-request-err');
