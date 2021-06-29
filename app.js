@@ -37,3 +37,5 @@ app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
+
+module.exports = app;

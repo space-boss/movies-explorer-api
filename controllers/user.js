@@ -16,7 +16,7 @@ module.exports.getUserProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .orFail(new NotFoundError('Пользователь с данным _id не найден'));
-    res.status(200).json(
+    res.json(
       {
         name: user.name, email: user.email, about: user.about, avatar: user.avatar, _id: user._id,
       },
@@ -31,7 +31,7 @@ module.exports.updateUserProfile = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(req.user._id, { email, name }, opts)
       .orFail(new NotFoundError('Запрашиваемый профиль не найден'));
-    res.status(200).json(
+    res.json(
       {
         email: user.email, name: user.name, _id: user._id,
       },
@@ -47,12 +47,10 @@ module.exports.updateUserProfile = async (req, res, next) => {
 
 module.exports.createUser = async (req, res, next) => {
   const { email, password, name } = req.body;
-  if (!email || !password || !name) {
-    throw new ValidationError('Не передан email, пароль или имя');
-  } try {
+  try {
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
     await User.create({ email, password: hash, name });
-    res.status(200).send({ message: 'Пользователь успешно создан' });
+    res.send({ message: 'Пользователь успешно создан' });
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new ValidationError('Переданы некорректные данные'));
@@ -68,9 +66,6 @@ module.exports.createUser = async (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new ValidationError('Не передан email или пароль');
-  }
   try {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {

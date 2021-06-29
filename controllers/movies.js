@@ -2,14 +2,12 @@ const mongoose = require('mongoose');
 const { Movie } = require('../models/Movie');
 const BadRequestError = require('../errors/bad-request-err');
 const ValidationError = require('../errors/validation-err');
-const AuthError = require('../errors/authentication-err');
 const NotFoundError = require('../errors/not-found-err');
-const ConflictError = require('../errors/conflict-err');
 
 module.exports.getMovies = async (req, res, next) => {
   try {
     const movies = await Movie.find({});
-    res.status(200).send(movies);
+    res.send(movies);
   } catch (err) {
     next(err);
   }
@@ -36,7 +34,7 @@ module.exports.createMovie = async (req, res, next) => {
       nameEN,
       thumbnail,
     });
-    res.status(200).json({
+    res.json({
       country: movie.country,
       director: movie.director,
       duration: movie.duration,
@@ -52,7 +50,7 @@ module.exports.createMovie = async (req, res, next) => {
     });
   } catch (err) {
     if (err.name === 'ValidationError') {
-      console.log('При создании страницы фильма переданы некорректные данные');
+      next(new BadRequestError('При создании страницы фильма переданы некорректные данные'));
       return;
     }
     next(err);
@@ -71,7 +69,7 @@ module.exports.deleteMovieById = async (req, res, next) => {
       } else {
         const movieWithId = await Movie.findByIdAndDelete(req.params.movieId)
           .orFail(new NotFoundError('Запрашиваемый фильм не найден'));
-        res.status(200).send(movieWithId);
+        res.send(movieWithId);
       }
     }
   } catch (err) {
