@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    'jest/globals': true,
   },
   extends: [
     'airbnb-base',
@@ -14,4 +15,7 @@ module.exports = {
     'no-underscore-dangle':
     ['error', { allow: ['_id'] }],
   },
+  plugins: [
+    'jest',
+  ],
 };

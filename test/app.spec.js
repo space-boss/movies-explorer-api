@@ -1,5 +1,4 @@
-/* eslint-disable*/
-
+/* eslint-disable */
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../app');
@@ -119,10 +118,10 @@ describe('GET /users/me', () => {
   it('Gets information about the user', (done) => {
     agent
       .get('/users/me')
-      .set({ "Authorization": `Bearer ${token}` })
+      .set({ 'Authorization': `Bearer ${token}` })
       .expect((res) => {
         console.log(res.body)
-        res.body.name === "Hans Schnitzel";
+        res.body.name === 'Hans Schnitzel';
       })
       .expect(200)
       .end((err, res) => {
@@ -136,18 +135,18 @@ describe('POST /movies', () => {
   it('Posting movies returns a 200', (done) => {
     agent
       .post('/movies')
-      .set({ "Authorization": `Bearer ${token}` })
+      .set({ 'Authorization': `Bearer ${token}` })
       .send({
-        "country": "AU",
-        "director": "Wes Anderson",
-        "duration": 120,
-        "year": 2013,
-        "description": "movie about two kids running away",
-        "image": "https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg",
-        "trailer": "https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg",
-        "thumbnail": "https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg",
-        "nameRU": "Королевство полной луны",
-        "nameEN": "Moonrise Kingdom"
+        country: 'AU',
+        director: 'Wes Anderson',
+        duration: 120,
+        year: 2013,
+        description: 'movie about two kids running away',
+        image: 'https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg',
+        trailer: 'https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg',
+        thumbnail: 'https://filmquarterly.org/wp-content/uploads/2014/01/moonrise_featured.jpg',
+        nameRU: 'Королевство полной луны',
+        nameEN: 'Moonrise Kingdom'
       })
       .expect(200)
       .end((err, res) => {
@@ -161,7 +160,7 @@ describe('GET /movies', () => {
   it('Gets all movies and returns a 200', (done) => {
     agent
       .get('/movies')
-      .set({ "Authorization": `Bearer ${token}` })
+      .set({ 'Authorization': `Bearer ${token}` })
       .expect(200)
       .end((err, res) => {
         console.log(res.body);
