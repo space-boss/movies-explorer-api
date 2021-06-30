@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const movieSchema = mongoose.Schema({
+  movieId: {
+    type: Number,
+    required: true,
+  },
+
   country: {
     type: String,
     required: true,

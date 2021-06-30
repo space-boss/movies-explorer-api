@@ -7,6 +7,7 @@ const email = `test+${Date.now()}@example.com`;
 const agent = supertest.agent(app);
 
 let token = '';
+let movie_id = '';
 
 beforeAll(function (done) {
 
@@ -137,6 +138,7 @@ describe('POST /movies', () => {
       .post('/movies')
       .set({ 'Authorization': `Bearer ${token}` })
       .send({
+        movieId: 123,
         country: 'AU',
         director: 'Wes Anderson',
         duration: 120,
@@ -150,6 +152,7 @@ describe('POST /movies', () => {
       })
       .expect(200)
       .end((err, res) => {
+        movie_id = res.body._id;
         if (err) done(err);
         done();
       });
@@ -165,6 +168,19 @@ describe('GET /movies', () => {
       .end((err, res) => {
         console.log(res.body);
         movieId = res.body._id;
+        done();
+      });
+  });
+});
+
+describe('DELETE /movies/:movieId', () => {
+  it('Deletes a movie by its id', (done) => {
+    agent
+      .delete('/movies/${movie_id}')
+      .set({ 'Authorization': `Bearer ${token}` })
+      .expect(200)
+      .end((err, res) => {
+        console.log(res.body);
         done();
       });
   });

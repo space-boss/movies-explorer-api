@@ -19,6 +19,7 @@ moviesRoutes.get('/movies', getMovies);
 
 moviesRoutes.post('/movies', celebrate({
   body: Joi.object().keys({
+    movieId: Joi.number().required(),
     country: Joi.string().required().min(2).max(30),
     director: Joi.string().required().min(2).max(30),
     duration: Joi.number().required().min(1).max(1000),
@@ -30,13 +31,12 @@ moviesRoutes.post('/movies', celebrate({
     nameRU: Joi.string().required().min(1).max(100),
     nameEN: Joi.string().required().min(1).max(100),
     thumbnail: Joi.string().required().custom(validateUrl, 'Ссылка не валидна'),
-    movieId: Joi.string().hex().length(24),
   }),
 }), createMovie);
 
 moviesRoutes.delete('/movies/:movieId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    movieId: Joi.string().hex().length(24),
   }).unknown(true),
 }), deleteMovieById);
 

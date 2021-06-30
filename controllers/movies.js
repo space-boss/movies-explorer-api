@@ -16,12 +16,13 @@ module.exports.getMovies = async (req, res, next) => {
 module.exports.createMovie = async (req, res, next) => {
   try {
     const {
-      country, director, duration,
+      movieId, country, director, duration,
       year, description, image, trailer,
       thumbnail, nameRU, nameEN,
     } = req.body;
     const ownerId = new mongoose.Types.ObjectId(req.user._id);
     const movie = await Movie.create({
+      movieId,
       country,
       director,
       duration,
@@ -35,6 +36,7 @@ module.exports.createMovie = async (req, res, next) => {
       thumbnail,
     });
     res.json({
+      movieId: movie.movieId,
       country: movie.country,
       director: movie.director,
       duration: movie.duration,
@@ -44,9 +46,9 @@ module.exports.createMovie = async (req, res, next) => {
       trailer: movie.trailer,
       thumbnail: movie.thumbnail,
       owner: movie.owner,
-      _id: movie._id,
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
+      _id: movie._id,
     });
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -64,7 +66,7 @@ module.exports.deleteMovieById = async (req, res, next) => {
     } else {
       const movie = await Movie.findById(req.params.movieId)
         .orFail(new NotFoundError('Запрашиваемый фильм не найден'));
-      if (movie.owner.toString() !== req.user._id) {
+      if (movie.owner.toString() !== req.user.movieId) {
         throw new BadRequestError('У вас нет прав для удаления информации о фильме');
       } else {
         const movieWithId = await Movie.findByIdAndDelete(req.params.movieId)
