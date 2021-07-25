@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { celebrate, Joi } = require('celebrate');
 
 const { moviesRoutes } = require('./movies');
@@ -14,6 +15,11 @@ const router = express.Router();
 router.use(bodyParser.json());
 
 router.use(cookieParser());
+
+router.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 
 router.route('/signin').post(celebrate({
   body: Joi.object().keys({
