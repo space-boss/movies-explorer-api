@@ -46,10 +46,10 @@ module.exports.updateUserProfile = async (req, res, next) => {
 };
 
 module.exports.createUser = async (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { name, email, password } = req.body;
   try {
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
-    await User.create({ email, password: hash, name });
+    await User.create({ name, email, password: hash });
     res.send({ message: 'Пользователь успешно создан' });
   } catch (err) {
     if (err.name === 'ValidationError') {
