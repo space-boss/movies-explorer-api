@@ -36,7 +36,7 @@ API is protected with authorization middleware.
 * eslint
 
 ## Install the project
-`git clone https://github.com/space-boss/movies-explorer-api`
+`git clone https://github.com/space-boss/movies-explorer-api.git`
 
 `npm install` - installs the dependencies;
 
